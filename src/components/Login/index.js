@@ -1,6 +1,27 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+import Color from "color";
 
 const green = "#00ad5f";
+const greenFade = Color(green)
+  .fade(0.5)
+  .string();
+const red = "#f44336";
+const redFade = Color(red)
+  .fade(0.5)
+  .string();
+const gray = "#9e9e9e";
+const grayFade = Color(gray)
+  .fade(0.5)
+  .string();
+
+const rotate = keyframes`
+  0%   {left:0px; top:0px;}
+  25%  {left:25px; top:0px;}
+  50%  {left:-25px; top:0;}
+  75%  {left:15px; top:0;}
+  95% {left:-15px; top:0px;}
+  100% {left:0px; top:0px;}
+`;
 
 export const Container = styled.div`
   width: 100%;
@@ -14,7 +35,8 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background: ${props => props.background ? `url(${props.background})` : '#f2f2f2'} ;
+  background: ${props =>
+    props.background ? `url(${props.background})` : "#f2f2f2"};
   background-size: cover;
   background-position: center;
 `;
@@ -108,7 +130,7 @@ export const Input = styled.input`
   transition: color 0.4s;
 
   &:focus {
-      color: #000;
+    color: #000;
   }
 
   &::-webkit-input-placeholder {
@@ -120,12 +142,12 @@ export const Input = styled.input`
     transition: color 0.4s;
   }
 
-  &:focus:invalid { 
+  &:focus:invalid {
     border-color: red;
   }
 
   &:valid {
-    border-color: ${green}
+    border-color: ${green};
   }
 `;
 
@@ -140,9 +162,38 @@ export const Button = styled.button`
   border-radius: 3px;
   outline: none;
   margin-bottom: 50px;
+  position: relative;
   transition: background 0.3s;
+  box-shadow: 0 3px 0 1px ${greenFade};
+  top: 0;
+  -webkit-transition: top, box-shadow 0.2s, 0.2s; /* Safari */
+  transition: top, box-shadow 0.2s, 0.2s;
 
-  &:active {
+  &.error {
+    animation: ${rotate} 0.5s linear infinite;
+    animation-iteration-count: 1;
+    background: ${red};
+    box-shadow: 0 3px 0 1px ${redFade};
+  }
+
+  span {
+    float: right;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  :disabled {
+    cursor: not-allowed;
+    background: ${gray};
+    box-shadow: 0 3px 0 1px ${grayFade};
+  }
+
+  :active {
     background: #00723f;
+    box-shadow: 0 1px 0 1px ${greenFade};
+    top: 2px;
+    -webkit-transition: top, box-shadow 0.2s, 0.2s; /* Safari */
+    transition: top, box-shadow 0.2s, 0.2s;
   }
 `;
