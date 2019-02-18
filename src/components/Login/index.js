@@ -1,199 +1,73 @@
-import styled, { keyframes } from "styled-components";
-import Color from "color";
+import React, { useState } from 'react'
+import classNames from "classnames";
+import {
+  Form,
+  FormTitle,
+  Input,
+  Button
+} from "./styles";
+import Icon from "../Icon";
+import login from '../../api/login'
 
-const green = "#00ad5f";
-const greenFade = Color(green)
-  .fade(0.5)
-  .string();
-const red = "#f44336";
-const redFade = Color(red)
-  .fade(0.5)
-  .string();
-const gray = "#9e9e9e";
-const grayFade = Color(gray)
-  .fade(0.5)
-  .string();
+const useInputForm = initialState => {
+    const [value, setValue] = useState(initialState);
 
-const rotate = keyframes`
-  0%   {left:0px; top:0px;}
-  25%  {left:25px; top:0px;}
-  50%  {left:-25px; top:0;}
-  75%  {left:15px; top:0;}
-  95% {left:-15px; top:0px;}
-  100% {left:0px; top:0px;}
-`;
+    const handleChange = e => {
+        setValue(e.target.value);
+    };
 
-export const Container = styled.div`
-  width: 100%;
-  min-height: 100vh;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-  background: ${props =>
-    props.background ? `url(${props.background})` : "#f2f2f2"};
-  background-size: cover;
-  background-position: center;
-`;
+    return {
+        value,
+        onChange: handleChange
+    };
+};
 
-export const LoginContainer = styled.div`
-  display: grid;
-  grid-template-areas: "cover login";
-  grid-template-columns: 40% auto;
-  background: #fff;
-  width: 960px;
-  box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.3);
-  border-radius: 9px;
-  color: #555555;
+const LoginPage = () => {
+    const user = useInputForm("");
+    const password = useInputForm("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const buttonClass = classNames({
+        error: error
+    });
 
-  @media (max-width: 768px) {
-    grid-template-areas: "login";
-    grid-template-columns: auto;
-  }
-`;
+    const handleSubmit = async e => {
+        e.preventDefault();
+        setLoading(true);
+        setError("");
 
-export const Cover = styled.div`
-  background: ${props =>
-    props.background ? `url(${props.background})` : "#FFF"};
-  background-size: cover;
-  background-position: center;
-  grid-area: "cover";
-  border-radius: 9px 0 0 9px;
-  z-index: 1;
-  position: relative;
+        const { token, error } = await login(user.value, password.value);
+        setLoading(false)
+        if (error) setError(error)
+        else localStorage.setItem(process.env.REACT_APP_STORAGE_NAME, token)
+    };
+    return (
+        <>
+            <Form onSubmit={handleSubmit}>
+                <FormTitle>Entrar</FormTitle>
+                <Input placeholder="Usuário" required {...user} />
+                <Input
+                    placeholder="Senha"
+                    required
+                    type="password"
+                    {...password}
+                />
+                <Button className={buttonClass} disabled={loading}>
+                    {error ? (
+                        <>
+                            {error}
+                            <span>
+                                <Icon name="times" />
+                            </span>
+                        </>
+                    ) : (
+                            "Entrar"
+                        )}
+                    {loading ? <span className="loader" /> : ""}
+                </Button>
+            </Form>
+        </>
+    )
+}
 
-  &::before {
-    content: "";
-    display: block;
-    position: absolute;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    background-image: linear-gradient(rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 1));
-    z-index: -1;
-    border-radius: 5px;
-  }
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-export const Login = styled.div`
-  background: #fff;
-  grid-area: "login";
-  border-radius: 0 9px 9px 0;
-
-  @media (max-width: 768px) {
-    border-radius: 9px;
-  }
-`;
-
-export const Brand = styled.div`
-  text-align: right;
-  font-size: 13px;
-  margin-right: 15px;
-  margin-top: 15px;
-  text-transform: uppercase;
-`;
-
-export const Form = styled.form`
-  width: 65%;
-  margin: 35px auto;
-`;
-
-export const Title = styled.span`
-  font-size: 20px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-`;
-
-export const FormTitle = styled(Title)`
-  border-bottom: 2px solid #555555;
-`;
-
-export const Input = styled.input`
-  border: none;
-  border-bottom: 1px solid #555555;
-  display: block;
-  margin: 25px 0;
-  font-size: 18px;
-  outline: none;
-  padding: 8px 0;
-  width: 100%;
-  color: #555555;
-  transition: color 0.4s;
-
-  &:focus {
-    color: #000;
-  }
-
-  &::-webkit-input-placeholder {
-    transition: color 0.4s;
-  }
-
-  &:focus::-webkit-input-placeholder {
-    color: black;
-    transition: color 0.4s;
-  }
-
-  &:focus:invalid {
-    border-color: red;
-  }
-
-  &:valid {
-    border-color: ${green};
-  }
-`;
-
-export const Button = styled.button`
-  background: ${green};
-  border: none;
-  padding: 15px;
-  width: 100%;
-  color: #fff;
-  font-size: 18px;
-  margin-top: 50px;
-  border-radius: 3px;
-  outline: none;
-  margin-bottom: 50px;
-  position: relative;
-  transition: background 0.3s;
-  box-shadow: 0 3px 0 1px ${greenFade};
-  top: 0;
-  -webkit-transition: top, box-shadow 0.2s, 0.2s; /* Safari */
-  transition: top, box-shadow 0.2s, 0.2s;
-
-  &.error {
-    animation: ${rotate} 0.5s linear infinite;
-    animation-iteration-count: 1;
-    background: ${red};
-    box-shadow: 0 3px 0 1px ${redFade};
-  }
-
-  span {
-    float: right;
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-
-  :disabled {
-    cursor: not-allowed;
-    background: ${gray};
-    box-shadow: 0 3px 0 1px ${grayFade};
-  }
-
-  :active {
-    background: #00723f;
-    box-shadow: 0 1px 0 1px ${greenFade};
-    top: 2px;
-    -webkit-transition: top, box-shadow 0.2s, 0.2s; /* Safari */
-    transition: top, box-shadow 0.2s, 0.2s;
-  }
-`;
+export default LoginPage;
