@@ -14,6 +14,7 @@ import {
 import Background from "./assets/images/background.jpg";
 import SiteBg from "./assets/images/sitebg.png";
 import Icon from "./components/Icon";
+import login from './api/login'
 
 const useInputForm = initialState => {
   const [value, setValue] = useState(initialState);
@@ -37,35 +38,15 @@ const App = () => {
     error: error
   });
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const body = {
-      user: user.value,
-      password: password.value
-    };
 
-    const requestInfo = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
-    };
-    // test login with local api
-    fetch("http://localhost:4000/login/test", requestInfo)
-      .then(response => {
-        if (response.ok) return response.json();
-        if (response.status === 401)
-          throw new Error("Usuário ou Senha inválidos!");
-        else throw new Error(response.status);
-      })
-      .then(data => setLoading(false))
-      .catch(e => {
-        setLoading(false)
-        setError(e.message)
-      });
+    const { token, error } = await login(user.value, password.value);
+    setLoading(false)
+    if(error) setError(error)
+    else console.log(token)
   };
 
   return (
@@ -93,8 +74,8 @@ const App = () => {
                     </span>
                   </>
                 ) : (
-                  "Entrar"
-                )}
+                    "Entrar"
+                  )}
                 {loading ? <span className="loader" /> : ""}
               </Button>
             </Form>
