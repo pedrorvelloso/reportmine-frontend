@@ -1,6 +1,6 @@
 {
-  "name": "redmine-report-frontend",
-  "version": "0.1.0",
+  "name": "reportmine-frontend",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
