@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Form, FormTitle, Input, Button } from './styles';
 import Icon from '../Icon';
@@ -17,7 +18,8 @@ const useInputForm = initialState => {
 	};
 };
 
-const LoginPage = props => {
+const LoginPage = ({ ...props }) => {
+	const { setLogin } = props;
 	const user = useInputForm('');
 	const password = useInputForm('');
 	const [error, setError] = useState('');
@@ -36,7 +38,7 @@ const LoginPage = props => {
 		if (error) setError(error);
 		else {
 			localStorage.setItem(process.env.REACT_APP_STORAGE_NAME, token);
-			props.setLogin(token);
+			setLogin(token);
 		}
 	};
 	return (
@@ -61,6 +63,10 @@ const LoginPage = props => {
 			</Form>
 		</>
 	);
+};
+
+LoginPage.propTypes = {
+	setLogin: PropTypes.func.isRequired
 };
 
 export default LoginPage;

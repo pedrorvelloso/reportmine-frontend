@@ -26,7 +26,7 @@ const ContainerPage = ({ ...props }) => {
 		clearTimeout(timer);
 		timer = setTimeout(() => {
 			setLoad(false);
-		}, 660);
+		}, 2000);
 		return () => {
 			setLoad(true);
 			clearTimeout(timer);
