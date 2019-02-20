@@ -1,4 +1,9 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const fadeIn = keyframes`
+	from { opacity: 0; }
+	to { opacity: 1; }
+`;
 
 export const Container = styled.div`
 	width: 100%;
@@ -75,6 +80,10 @@ export const Page = styled.div`
 export const PageContent = styled.div`
 	width: 65%;
 	margin: 35px auto;
+
+	&.loaded {
+		animation: ${fadeIn} 2s;
+	}
 `;
 
 export const Brand = styled.div`

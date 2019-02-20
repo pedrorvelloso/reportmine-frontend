@@ -17,7 +17,7 @@ const useInputForm = initialState => {
 	};
 };
 
-const LoginPage = () => {
+const LoginPage = props => {
 	const user = useInputForm('');
 	const password = useInputForm('');
 	const [error, setError] = useState('');
@@ -34,7 +34,10 @@ const LoginPage = () => {
 		const { token, error } = await login(user.value, password.value);
 		setLoading(false);
 		if (error) setError(error);
-		else localStorage.setItem(process.env.REACT_APP_STORAGE_NAME, token);
+		else {
+			localStorage.setItem(process.env.REACT_APP_STORAGE_NAME, token);
+			props.setLogin(token);
+		}
 	};
 	return (
 		<>

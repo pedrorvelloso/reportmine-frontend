@@ -12,7 +12,6 @@ const ReportGenerator = props => {
 
 	useEffect(() => {
 		getProjects();
-		console.log(props.history);
 	}, []);
 
 	const getProjects = async () => {

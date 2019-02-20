@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Generated from './Generated';
+import Generated from './components/Generated';
 
 import { Router, Switch, Route } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
