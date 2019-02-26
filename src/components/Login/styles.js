@@ -73,6 +73,7 @@ export const Input = styled.input`
 	width: 100%;
 	color: #555555;
 	transition: color 0.4s;
+	background: #fff;
 
 	&:focus {
 		color: #000;

@@ -7,14 +7,27 @@ import { withRouter } from 'react-router-dom';
 
 import { getProjectsUser, getIssues } from '../../api/project';
 
+import DatePicker from '../DatePicker';
+import moment from 'moment';
+
 const ReportGenerator = ({ ...props }) => {
 	const { history } = props;
 	const [projects, setProjects] = useState([]);
+	const [to, setTo] = useState(undefined);
+	const [from, setFrom] = useState(undefined);
+
 	const [selectedProject, setSelectedProject] = useState('');
 
 	useEffect(() => {
 		getProjects();
 	}, []);
+
+	useEffect(() => {
+		console.log(
+			moment(to).format('YYYY-MM-DD'),
+			moment(from).format('YYYY-MM-DD')
+		);
+	}, [to, from]);
 
 	const getProjects = async () => {
 		const { projects } = await getProjectsUser();
@@ -44,6 +57,8 @@ const ReportGenerator = ({ ...props }) => {
 					);
 				})}
 			</Projects>
+
+			<DatePicker to={to} from={from} setTo={setTo} setFrom={setFrom} />
 
 			<Button onClick={generateReport}>Gerar Relatório</Button>
 		</>
